@@ -43,7 +43,7 @@ exit;*/
       }
     }
 
-    $view = View::factory('login');
+    $view = View::factory('admin/login');
 
     if(isset($_SESSION['msg']))
     {

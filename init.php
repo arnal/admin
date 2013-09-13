@@ -9,7 +9,7 @@ Route::set('object_list', '<type>',
     'action'     => 'list',
   ));
 
-Route::set('object', '<type>/<id>(.<format>)(/<action>)',
+Route::set('admin/object', '<type>/<id>(.<format>)(/<action>)',
   array(
     'type' => Namlouvani::objects_route(),
     'id' => '\d+',
@@ -21,7 +21,7 @@ Route::set('object', '<type>/<id>(.<format>)(/<action>)',
     'action'     => 'show',
   ));
 
-Route::set('object_new', '<type>/create',
+Route::set('admin/object_new', '<type>/create',
   array(
     'type' => Namlouvani::objects_route(),
   ))
@@ -30,31 +30,31 @@ Route::set('object_new', '<type>/create',
     'action'     => 'create',
   ));
 
-Route::set('login', 'login')
+Route::set('admin/login', 'login')
   ->defaults(array(
     'controller' => 'admin_login',
     'action'     => 'index',
   ));
 
-Route::set('prefs', 'prefs')
+Route::set('admin/prefs', 'prefs')
   ->defaults(array(
     'controller' => 'admin_admin',
     'action'     => 'prefs',
   ));
 
-Route::set('logout', 'logout')
+Route::set('admin/logout', 'logout')
   ->defaults(array(
     'controller' => 'admin_login',
     'action'     => 'logout',
   ));
 
-Route::set('default', '(<controller>(/<action>(/<id>)))')
+Route::set('admin/default', '(<controller>(/<action>(/<id>)))')
   ->defaults(array(
-    'controller' => 'admin_welcome',
+    'controller' => 'admin_index',
     'action'     => 'index',
   ));
 
-Route::set('ajx', 'ajx')
+Route::set('admin/ajx', 'ajx')
   ->defaults(array(
     'controller' => 'ajx',
     'action'     => 'index',

@@ -96,7 +96,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
 
     error_reporting(E_ALL);
-    $view = new View_Admin_Layout('object_edit');
+    $view = new View_Admin_Layout('admin/object_edit');
 
     $view->content->type = $conf;
     $view->content->item = $item;
@@ -183,7 +183,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       return true;
     }
 
-    $view = new View_Admin_Layout('object_show');
+    $view = new View_Admin_Layout('admin/object_show');
     $view->content->cols = $item->render('show');
     $view->content->cancel_url = $this->request->referrer(); 
     $view->content->edit_url = $item->url().'/edit';
@@ -332,7 +332,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
     $item = Document::factory(ucfirst($current_type['id']));
   
-    $view = new View_Admin_Layout('object_create');
+    $view = new View_Admin_Layout('admin/object_create');
     $view->current_page = $current_page;
     $view->content->type = $current_type;
     $view->content->cols = $item->render('edit');
@@ -504,7 +504,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     }
 
     // create view
-    $view = new View_Admin_Layout('object_list');
+    $view = new View_Admin_Layout('admin/object_list');
     $view->current_page = $current_page;
 
     $view->content->count = $items->count_all();

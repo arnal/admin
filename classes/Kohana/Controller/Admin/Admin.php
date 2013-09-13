@@ -37,7 +37,7 @@ class Kohana_Controller_Admin_Admin extends Controller_Admin_Basic {
       return;
     }
 
-    $view = new View_Admin_Layout('admin_prefs');
+    $view = new View_Admin_Layout('admin/prefs');
     $view->content->prefs = $prefs;
     $view->content->user_prefs = $user->prefs();
 
