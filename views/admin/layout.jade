@@ -3,7 +3,9 @@ html(lang='cs')
   head
     block head
       meta(charset='utf-8')
-      title Namlouvání Adminstrace
+      title= site_config.title
+        | Administrace
+
       link(href='/admin/css/base.css',rel='stylesheet')
       each c in css
         link(href=c,rel='stylesheet',type='text/css',media='screen, projection')
@@ -24,7 +26,7 @@ html(lang='cs')
     div.navbar.navbar-inverse.navbar-fixed-top
       div.navbar-inner
         div.container-fluid
-          a.brand(href='/admin/') Namlouvání.cz
+          a.brand(href='/admin/')= site_config.title
           div.nav-collapse.collapse
             div.navbar-text.pull-right 
               div.btn-group(style='display:inline-block;')

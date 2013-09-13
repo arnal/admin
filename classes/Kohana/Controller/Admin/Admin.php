@@ -32,7 +32,7 @@ class Kohana_Controller_Admin_Admin extends Controller_Admin_Basic {
         $user->save();
       } 
 
-      Namlouvani::msg('Vaše nastavení bylo uloženo.');
+      Arnal::msg('Vaše nastavení bylo uloženo.');
       $this->redirect('prefs');
       return;
     }

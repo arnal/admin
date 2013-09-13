@@ -28,14 +28,14 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function check_access($type, $allow_edit=NULL)
   {
-    $conf = Namlouvani::objects($type);
+    $conf = Arnal::objects($type);
     $is_admin = Auth::instance()->get_user()->is_admin;
 
     $res = !((isset($conf['admin']) AND $conf['admin'] == TRUE) AND !$is_admin);
     $res = ($res AND ($allow_edit !== FALSE));
     if(!$res)
     {
-      Namlouvani::msg('<strong>Přístup odepřen.</strong> K tomuhle nemáte přístup. Sorry.', 'warning');
+      Arnal::msg('<strong>Přístup odepřen.</strong> K tomuhle nemáte přístup. Sorry.', 'warning');
     }
     return $res;
   }
@@ -54,7 +54,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_edit()
   {
-    $conf = Namlouvani::objects($this->request->param('type'));
+    $conf = Arnal::objects($this->request->param('type'));
 
     $current_page = $conf['plural'];
     $current_type = $conf;
@@ -108,7 +108,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_delete()
   {
-    $conf = Namlouvani::objects($this->request->param('type'));
+    $conf = Arnal::objects($this->request->param('type'));
     if(!$this->check_access($conf['id'], $conf['allow_delete']))
     {
       return $this->denied_redirect();
@@ -132,15 +132,15 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
       $item->delete();
 
-      Namlouvani::msg('Smazání objektu proběhlo úspěšně.');
-      Namlouvani::log($class.'.delete', $item_array, $class, $item_id);
+      Arnal::msg('Smazání objektu proběhlo úspěšně.');
+      Arnal::log($class.'.delete', $item_array, $class, $item_id);
     }
     $this->redirect($conf['plural']);
   }
 
   public function action_show()
   {
-    $conf = Namlouvani::objects($this->request->param('type'));
+    $conf = Arnal::objects($this->request->param('type'));
     if(!$this->check_access($conf['id']))
     {
       return $this->denied_redirect();
@@ -156,7 +156,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
     if(!$item->loaded())
     {
-      Namlouvani::msg('Neexistující záznam nebo k němu nemáte přístup.', 'warning');
+      Arnal::msg('Neexistující záznam nebo k němu nemáte přístup.', 'warning');
       return $this->redirect('/');
     }
 
@@ -170,8 +170,8 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       $item->$col = $note;
       $item->save();
 
-      Namlouvani::msg('Poznámka úspěšně uložena.');
-      Namlouvani::log($class.'.'.$_POST['do'], $note, $class, $item->id);
+      Arnal::msg('Poznámka úspěšně uložena.');
+      Arnal::log($class.'.'.$_POST['do'], $note, $class, $item->id);
 
       return $this->redirect($item->url());
     }
@@ -205,7 +205,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   private function _edit_do($type, $id, $data)
   {
-    $conf = Namlouvani::objects(strtolower($type));
+    $conf = Arnal::objects(strtolower($type));
     $item = ORM::factory($type);
 
     // uzivatelska prava nastavena na Modelu
@@ -259,18 +259,18 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     $ok = $item->save();
     if(!$ok OR !$item->loaded())
     {
-      Namlouvani::msg('Stala se chyba při ukládání do databáze.','warning');
+      Arnal::msg('Stala se chyba při ukládání do databáze.','warning');
       return FALSE;
     }
 
-    Namlouvani::msg('Úpravy v pohodě prolezly do databáze.');
-    Namlouvani::log($type.'.edit', $item->as_array(), $type, $item->id);
+    Arnal::msg('Úpravy v pohodě prolezly do databáze.');
+    Arnal::log($type.'.edit', $item->as_array(), $type, $item->id);
     return $item;
   }
 
   private function _create_do($type, $data)
   {
-    $conf = Namlouvani::objects(strtolower($type));
+    $conf = Arnal::objects(strtolower($type));
     $item = ORM::factory($type);
     foreach($data as $key=>$val)
     {
@@ -305,14 +305,14 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       $item->add('roles', 1);
     }
 
-    Namlouvani::msg('Vytvoření objektu proběhlo úspěšně.');
-    Namlouvani::log($type.'.create', $item->as_array(), $type, $item->id);
+    Arnal::msg('Vytvoření objektu proběhlo úspěšně.');
+    Arnal::log($type.'.create', $item->as_array(), $type, $item->id);
     return $item;
   }
 
   public function action_create()
   {
-    $conf = Namlouvani::objects($this->request->param('type'));
+    $conf = Arnal::objects($this->request->param('type'));
     if(!$this->check_access($conf['id'], $conf['allow_create']))
     {
       return $this->denied_redirect();
@@ -437,7 +437,8 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     if(!$params)
       return FALSE;
 
-    $fn = 'Namlouvani-'.$conf['name_plural'].'-'.date('Y_m_d-H_i').'.'.$params['ext'];
+    $site_config = Kohana::$config->load('site')->as_array();
+    $fn = preg_replace('/^https?:\/\//', '',$site_config['url']).'-'.$conf['name_plural'].'-'.date('Y_m_d-H_i').'.'.$params['ext'];
     $this->response->body($params['data']);
     $this->response->send_file(TRUE, $fn, array('mime_type' => $params['mime']));
   }
@@ -446,7 +447,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
   {
     $current_page = $this->request->param('type');
 
-    $conf = Namlouvani::object_config($current_page);
+    $conf = Arnal::object_config($current_page);
     if(!$this->check_access($conf['id']))
     {
       return $this->denied_redirect();
@@ -476,11 +477,11 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
           $it->action($action);
           $count++;
         }
-        Namlouvani::msg('Hotovo. Počet upravených záznamů: '.$count, 'success');
+        Arnal::msg('Hotovo. Počet upravených záznamů: '.$count, 'success');
       }
       else
       {
-        Namlouvani::msg('Nic se nestalo. Nevybrali jste žádný záznam.', 'warning');
+        Arnal::msg('Nic se nestalo. Nevybrali jste žádný záznam.', 'warning');
       }
       return $this->redirect($this->request->referrer());
     }

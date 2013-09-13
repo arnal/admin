@@ -30,20 +30,21 @@ exit;*/
 
       if($success)
       {
-        Namlouvani::msg('Vítejte <strong>'.$post['username'].'</strong>, byl jste úspěšně nalogován jako '.(Auth::instance()->get_user()->is_admin ? 'administrátor' : 'moderátor').'.','success');
+        Arnal::msg('Vítejte <strong>'.$post['username'].'</strong>, byl jste úspěšně nalogován jako '.(Auth::instance()->get_user()->is_admin ? 'administrátor' : 'moderátor').'.','success');
           
         $user = Auth::instance()->get_user();
-        Namlouvani::log('User.login', array(), 'User', $user->id);
+        Arnal::log('User.login', array(), 'User', $user->id);
         return $this->redirect(isset($_GET['r']) ? urldecode($_GET['r']) : '/');
       }
       else
       {
-        Namlouvani::msg('<strong>Špatný login</strong>. Neplatné přihlašovací údaje.','error');
+        Arnal::msg('<strong>Špatný login</strong>. Neplatné přihlašovací údaje.','error');
         return $this->redirect('/login');
       }
     }
 
     $view = View::factory('admin/login');
+    $view->site_config = Kohana::$config->load('site')->as_array();
 
     if(isset($_SESSION['msg']))
     {

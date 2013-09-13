@@ -1,13 +1,13 @@
-<?= Twitterbootstrap::print_css(); ?>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Přihlášení - Namlouvání.cz</title>
+    <title>Přihlášení - <?= $site_config['title'] ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <?= Twitterbootstrap::print_css(); ?>
 
     <!-- Le styles -->
     <style type="text/css">
@@ -67,7 +67,7 @@
 <? endif; ?>
 
       <form class="form-signin" action="?do" method="post">
-        <h2 class="form-signin-heading"><a href="/">Namlouvání.cz</a></h2>
+        <h2 class="form-signin-heading"><a href="/"><?= $site_config['title'] ?></a></h2>
         <input type="text" name="username" class="input-block-level" placeholder="Uživatelské jméno">
         <input type="password" name="password" class="input-block-level" placeholder="Heslo">
         <label class="checkbox">

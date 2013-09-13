@@ -2,7 +2,7 @@
 
 Route::set('object_list', '<type>',
   array(
-    'type' => Namlouvani::objects_plural_route(),
+    'type' => Arnal::objects_plural_route(),
   ))
   ->defaults(array(
     'controller' => 'admin_object',
@@ -11,7 +11,7 @@ Route::set('object_list', '<type>',
 
 Route::set('admin/object', '<type>/<id>(.<format>)(/<action>)',
   array(
-    'type' => Namlouvani::objects_route(),
+    'type' => Arnal::objects_route(),
     'id' => '\d+',
     'format' => '(json)',
     'action' => '(show|delete|edit)',
@@ -23,7 +23,7 @@ Route::set('admin/object', '<type>/<id>(.<format>)(/<action>)',
 
 Route::set('admin/object_new', '<type>/create',
   array(
-    'type' => Namlouvani::objects_route(),
+    'type' => Arnal::objects_route(),
   ))
   ->defaults(array(
     'controller' => 'admin_object',
