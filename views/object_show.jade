@@ -1,0 +1,52 @@
+h3 
+  a(href='/admin/'+type.plural)= type.name_plural
+  | →
+  span= type.name
+  | [ 
+  span= item.id
+  | ]
+
+div.container-fluid
+  div.span7
+    :css
+      dt, dd { margin-bottom: 10px; }
+      dd.last { margin-top: 20px; }
+
+    dl.dl-horizontal
+      each c, c_id in cols
+        dt!= c.name
+        dd!= c.rendered
+
+      dd.last
+        if type.allow_edit
+          a.btn(href=edit_url)
+            i.icon-edit
+            | Upravit
+        if type.allow_delete
+          a.btn.btn-danger(href=delete_url,onclick='return confirm("Opravdu chcete toto smazat?");')
+            i.icon-remove.icon-white
+            | Smazat
+        a.btn(href=cancel_url)
+          i.icon-arrow-left
+          | Vrátit zpět
+
+      dd.last
+        p: a(href=history_url) Zobrazit historii
+
+  div.span5 
+    if note_textarea
+      h4 Poznámka 
+        if note_admin_textarea 
+          | (moderátor)
+      form(method='post')#notes
+        input(type='hidden',name='do',value='note_save')
+        div!= note_textarea
+        button.btn(type='submit') Uložit
+
+    if note_admin_textarea
+      h4 Poznámka (admin)
+      form(method='post')#notes
+        input(type='hidden',name='do',value='note_admin_save')
+        div!= note_admin_textarea
+        button.btn(type='submit') Uložit
+    

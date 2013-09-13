@@ -1,0 +1,26 @@
+h3 Nastavení účtu
+form.form-horizontal(method='post',action='?update=1')
+  each cat, cat_id in prefs
+    :php
+      if(isset($cat['role']) AND $cat['role'] == 'admin' AND !Auth::instance()->get_user()->is_admin)
+      {
+        continue;
+      }
+    h4= cat.name
+    each pref, pref_id in cat.items
+      div.control-group
+        :php
+          $pref_name = join(':', array($cat_id, $pref_id));
+        label.control-label= pref.name
+        div.controls
+          :php
+            $val = $user_prefs[$pref_name];
+            if(isset($pref['dt'])){
+              $dt = DT::factory($pref['dt'], $val);
+              $pref_value = $dt->input($pref_name);
+            } else { $pref_value = Form::input($pref_name, $val); }
+      
+          span!= pref_value
+  div.form-actions
+      button.btn.btn-primary(name=pref_id,value=pref.default) Uložit
+

@@ -1,0 +1,112 @@
+
+div(style='overflow: auto;')
+  div(style='float:left')
+    h3= config['name_plural']
+
+  div(style='float:left; margin-top:10px; margin-left: 30px;')
+    if config['groups']
+      div
+        ul.nav.nav-pills
+          each f in config['groups']
+            :php
+              $class = (($current_group == $f['code']) ? 'active' : '');
+
+            li(class=class): a(href='?filter='+f.code)= f.name
+
+  if config['allow_create']
+    div(style='float:right; margin: 10px 20px 0 0;')
+      a.btn.btn-success(href='/admin/'+config['id']+'/create')
+        i.icon-plus.icon-white
+        | Přidat
+
+div
+  form.form-inline(method='get')
+    if config['wheres']
+      input(type='hidden',name='filter',value=current_group)
+      each w in config['wheres']
+        span= w['name']
+        | :
+        :php
+          $class = isset($w['class']) ? $w['class'] : 'input-small';
+          $active = isset($filters_active[$w['code']]);
+          $fv = $filters_active[$w['code']];
+          $style = $active ? 'background-color: #C2EDD1;' : '';
+
+        if w['where_input']
+          span.select!= w['where_input']
+        else
+          input(name=w['code'],value=fv,placeholder=w['placeholder'],class=class,style=style)
+
+        | &nbsp;&nbsp;
+      button.btn.btn-small(type='submit') Filtrovat
+      if wheres_active
+        a.btn.btn-small.btn-warning(href=wheres_cancel_url) Zrušit filtr
+
+    span &nbsp;&nbsp; Celkem: 
+      b= count
+
+form#list-form(method="post",action="?action")
+  if count
+    div
+      //div.span2
+      //  div.well.sidebar-nav
+      //    ul.nav.nav-list
+      //      li.nav-header Sidebar
+      //      li: a(href='#') Test
+      //      li.active: a(href='#') Všechny záznamy
+
+      div
+        table.table.table-hover#list
+          thead
+            tr
+              if has_actions
+                th
+              each c, c_id in config['cols']
+                if c.table
+                  th= c.name
+              th
+
+          tbody
+            each item in items['arr']
+              tr(data-url=item.url,data-type=item.type,data-id=item.id)
+                if has_actions
+                  td.cb
+                    input(name="ids[]",value=item['id'],type="checkbox")
+
+                each col, col_id in item['cols']
+                  td!= col['rendered']
+                td
+                  div.list-control
+                    if config['allow_edit']
+                      a.btn.btn-mini(href=''+item['url']+'/edit') Upravit
+
+                    if config['allow_delete']
+                      a.btn.btn-mini.btn-danger(href=''+item['url']+'/delete',onclick='return confirm("Opravdu chcete toto smazat?");') Smazat
+  else
+    p Nic nenalezeno.
+
+
+  if count
+    div
+      if has_actions
+        input(type="hidden",name="arg")
+        div.colbutt(style="display:none;")
+          each b in buttons
+            button.btn(class=b.class,type="submit",name="action",value=b.id,onclick=b.onclick)= b.text
+          hr
+
+      div!= pagination
+
+      div.btn-group
+        a.btn.btn-small(href=export_url_csv) Export do CSV
+        button.btn.btn-small.dropdown-toggle(data-toggle='dropdown')
+          span.caret
+
+        ul.dropdown-menu
+          li.small: a(href=export_url_json) Export do JSON
+      
+      if config.print
+        a.btn.btn-small(href=print_url,target="_blank")
+          i.icon-print
+          | Vytisknout
+          

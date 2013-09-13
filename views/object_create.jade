@@ -1,0 +1,21 @@
+h3 
+  a(href='/admin/'+type.plural)= type.name_plural
+  | → Nový objekt
+
+:css
+  th.right { text-align: right; }
+  input { width: 500px; }
+  textarea { width: 500px; }
+
+form.form-horizontal(method='post')
+  input(type='hidden', name='do', value='1')
+  each c, c_id in cols
+    div.control-group
+      label.control-label(for='x')!= c.name
+      div.controls!= c.input
+
+  div.form-actions
+    input.btn.btn-primary(type='submit',value='Uložit')
+    a.btn(href=cancel_url)
+      i.icon-arrow-left
+      | Zrušit a vrátit zpět

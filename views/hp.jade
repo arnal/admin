@@ -1,0 +1,74 @@
+h3 Přehled
+
+:css
+  .really_big { font-size: 40px; font-weight: bold; }
+  big { font-size: 20px; }
+
+div.container-fluid
+  div.span3
+    div
+      big.really_big= stats.submit.total
+      span přihlášek
+      <br/>
+      big: strong= stats.submit.new
+      | nových
+      <br/>
+      big: strong= stats.submit.confirmed
+      | potvrzené
+      <br/>
+      big: strong= stats.submit.denied
+      | zamítnutých
+
+  div.span3
+    div
+      big.really_big= stats.waitsubmit.total
+      span přihlášek do pořadníku
+      <br/>
+      big: strong= stats.waitsubmit.new
+      | nových
+      <br/>
+      big: strong= stats.waitsubmit.closed
+      | vyřízených
+
+  div.span3
+    div
+      big.really_big= stats.term.total
+      span termínů
+      <br/>
+      big: strong= stats.term.future
+      | budoucích
+      <br/>
+      big: strong= stats.term.gone
+      | uplynulých
+
+  div.span3
+    div
+      big.really_big= stats.code.total
+      span bonusových kódů
+      <br/>
+      big: strong= stats.code.active
+      | platných
+      <br/>
+      big: strong= stats.code.expired
+      | expirovaných
+
+<br />
+h4 Systém
+ul
+  li Kohana
+    :php
+      print(Kohana::VERSION);
+  li PHP
+    :php
+      print(phpversion());
+  li MySQL
+    :php
+      print(mysql_get_server_info());
+
+<br/>
+
+h4 Uvítání
+p Vítejte v administračním rozhraní serveru
+  a(href="/") Namlouvání.cz
+  |.
+

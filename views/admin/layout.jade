@@ -1,0 +1,89 @@
+!!!
+html(lang='cs') 
+  head
+    block head
+      meta(charset='utf-8')
+      title Namlouvání Adminstrace
+      link(href='/admin/css/base.css',rel='stylesheet')
+      each c in css
+        link(href=c,rel='stylesheet',type='text/css',media='screen, projection')
+
+      script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+      each j in js
+        script(src=j)
+      script(src="/admin/js/basic.js")
+
+  body
+    if admin_console
+      div.navbar.navbar-fixed-bottom
+        div.navbar-inner
+          div.container-fluid
+            a.brand arnal 1.0.0
+            a.btn(href="") Zapnout profilování
+
+    div.navbar.navbar-inverse.navbar-fixed-top
+      div.navbar-inner
+        div.container-fluid
+          a.brand(href='/admin/') Namlouvání.cz
+          div.nav-collapse.collapse
+            div.navbar-text.pull-right 
+              div.btn-group(style='display:inline-block;')
+                :php
+                  $btn_class = $admin ? 'btn-danger' : 'btn-info';
+                a.btn.dropdown-toggle(class=btn_class,data-toggle='dropdown',href='#')
+                  span='@ '+username
+                  span.caret
+                ul.dropdown-menu.pull-right
+                  li: a(href='/admin/prefs') Nastavení účtu
+                  li.divider
+                  li: a(href='/admin/logout') Odhlásit
+          ul.nav
+            :php
+              $class = ($current_page == 'hp' ? 'active' : '');
+            li(class=class): a(href='/admin') Přehled
+
+            :php
+              $groups = array();
+            each o,oid in objects
+              :php
+                $class = ($current_page == $o['plural'] ? 'active' : '');
+                if(isset($o['admin']) AND $o['admin'] == TRUE AND !$admin){ continue; }
+                if(isset($o['group']) AND $o['group'] == 'others'){ $groups[$o['group']][] = $o; continue; };
+  
+              li(class=class): a(href=o['home_url'])= o['name_plural']
+                //span.badge.badge-info(style='padding-left: 5px;padding-right:5px;') 18
+
+            each group,group_id in groups
+              li.dropdown
+                a.dropdown-toggle(href='#',data-toggle='dropdown') Další
+                  b.caret
+                ul.dropdown-menu
+                  each o,oid in group
+                    :php
+                      $class = ($current_page == $o['plural'] ? 'active' : '');
+                    li(class=class): a(href=o['home_url'])= o['name_plural']
+                  
+              
+
+    div.container-fluid
+      if msg
+        :php
+          $class = 'alert-'.$msg['type'];
+
+        div.alert(class=class)
+          button.close(data-dismiss='alert')
+            i.icon-remove
+
+          span!= msg.msg
+
+      div.row-fluid!= content
+
+    if profiler
+      div.profiler(style='margin-top: 10px;font-size: 11px;')!= profiler
+        
+    //div#footer
+    //  div.container
+    //    p.muted.credit &copy; 2013 
+    //      a(href='mailto:jan.stransky@arnal.cz') Jan Stránský      
+
+
