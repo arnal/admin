@@ -23,7 +23,7 @@ class Kohana_View_Admin_Layout extends Kohana_View_Jade_Layout {
     $this->vars['css'][] = URL::site('css/jsondiffpatch.css');
     $this->vars['css'][] = URL::site('css/datepicker.css');
 
-    $this->vars['objects'] = Arnal::objects();
+    $this->vars['objects'] = Arnal::$schema->load_all();
     $this->vars['username'] = $user->username;
     $this->vars['admin'] = $user->is_admin;
     $this->vars['admin_console'] = $user->pref('admin:console');

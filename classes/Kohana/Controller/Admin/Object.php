@@ -28,10 +28,10 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function check_access($type, $allow_edit=NULL)
   {
-    $conf = Arnal::objects($type);
+    $schema = Arnal::$schema->load($type);
     $is_admin = Auth::instance()->get_user()->is_admin;
 
-    $res = !((isset($conf['admin']) AND $conf['admin'] == TRUE) AND !$is_admin);
+    $res = !((isset($schema['admin']) AND $schema['admin'] == TRUE) AND !$is_admin);
     $res = ($res AND ($allow_edit !== FALSE));
     if(!$res)
     {
@@ -54,7 +54,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_edit()
   {
-    $conf = Arnal::objects($this->request->param('type'));
+    $conf = Arnal::$schema->load($this->request->param('type'));
 
     $current_page = $conf['plural'];
     $current_type = $conf;
@@ -108,7 +108,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_delete()
   {
-    $conf = Arnal::objects($this->request->param('type'));
+    $conf = Arnal::$schema->load($this->request->param('type'));
     if(!$this->check_access($conf['id'], $conf['allow_delete']))
     {
       return $this->denied_redirect();
@@ -140,7 +140,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_show()
   {
-    $conf = Arnal::objects($this->request->param('type'));
+    $conf = Arnal::$schema->load($this->request->param('type'));
     if(!$this->check_access($conf['id']))
     {
       return $this->denied_redirect();
@@ -205,7 +205,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   private function _edit_do($type, $id, $data)
   {
-    $conf = Arnal::objects(strtolower($type));
+    $conf = Arnal::$schema->load(strtolower($type));
     $item = ORM::factory($type);
 
     // uzivatelska prava nastavena na Modelu
@@ -270,7 +270,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   private function _create_do($type, $data)
   {
-    $conf = Arnal::objects(strtolower($type));
+    $conf = Arnal::$schema->load(strtolower($type));
     $item = ORM::factory($type);
     foreach($data as $key=>$val)
     {
@@ -312,7 +312,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
   public function action_create()
   {
-    $conf = Arnal::objects($this->request->param('type'));
+    $conf = Arnal::$schema->load($this->request->param('type'));
     if(!$this->check_access($conf['id'], $conf['allow_create']))
     {
       return $this->denied_redirect();
