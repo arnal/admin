@@ -11,13 +11,6 @@ class Kohana_Controller_Admin_Login extends Controller_Admin_Basic {
   public function action_index()
   {
     session_start();
-    /*$pass = '12opicek';
-    $reg = array('username'=>'tree', 'password'=>$pass, 'email'=>'jan.stransky@arnal.cz', 'password_confirm' =>$pass);
-    $user = ORM::factory('User')->create_user($reg, array('username', 'password', 'email'));
-    $user->save();
-  var_dump($user);
-exit;*/
-
 
     $post = $this->request->post();
     if(isset($_GET['do']))
