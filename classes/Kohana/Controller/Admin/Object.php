@@ -385,7 +385,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     }
     $out .= "<table><script>window.print();</script>";
 
-    $view = new View_Jade('print');
+    $view = new View_Jade('admin/print');
     $view->title = $term_mode ? join("", $terms) : FALSE;
     $view->content = $out;
     $this->response->body($view);
