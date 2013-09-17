@@ -13,7 +13,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     {
       foreach($rights['wheres'] as $w)
       {
-        if($item instanceOf Collection)
+        if($item instanceOf Kohana_Collection)
         {
           $item->where[] = array($w[0], $w[1], $w[2]);
         }
