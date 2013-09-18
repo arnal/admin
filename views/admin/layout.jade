@@ -42,30 +42,29 @@ html(lang='cs')
           ul.nav
             :php
               $class = ($current_page == 'hp' ? 'active' : '');
-            li(class=class): a(href='/admin') Přehled
 
             :php
               $groups = array();
-            each o,oid in objects
+            each o,oid in menu
               :php
-                $class = ($current_page == $o['plural'] ? 'active' : '');
+                $class = $o['class'].' '.($current_page == $o['code'] ? 'active' : '');
                 if(isset($o['admin']) AND $o['admin'] == TRUE AND !$admin){ continue; }
                 if(isset($o['group']) AND $o['group'] == 'others'){ $groups[$o['group']][] = $o; continue; };
-  
-              li(class=class): a(href=o['home_url'])= o['name_plural']
-                //span.badge.badge-info(style='padding-left: 5px;padding-right:5px;') 18
 
-            each group,group_id in groups
-              li.dropdown
-                a.dropdown-toggle(href='#',data-toggle='dropdown') Další
-                  b.caret
-                ul.dropdown-menu
-                  each o,oid in group
-                    :php
-                      $class = ($current_page == $o['plural'] ? 'active' : '');
-                    li(class=class): a(href=o['home_url'])= o['name_plural']
-                  
-              
+              if o['sections']
+                li.dropdown
+                  a.dropdown-toggle(href='#',data-toggle='dropdown')= o['name']
+                    b.caret
+                  ul.dropdown-menu
+                    each o,oid in o['sections']
+                      :php
+                        $class = $o['class'].' '.($current_page == $o['code'] ? 'active' : '');
+                      li(class=class): a(href=o['url'])= o['name']
+
+              else
+                li(class=class)
+                  a(href=o['url'])= o['name']
+                    //span.badge.badge-info(style='padding-left: 5px;padding-right:5px;') 18
 
     div.container-fluid
       if msg

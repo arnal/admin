@@ -1,0 +1,37 @@
+h3 O aplikaci
+
+h4 Autor
+ul
+  li!= author 
+
+h4 Systém
+ul
+  li Arnal 
+    :php
+      print(Arnal::VERSION.' `'.Arnal::CODENAME).'` (KO'.Kohana::VERSION.')';
+
+:php
+  if(isset($_GET['modules'])):
+h4 Moduly
+ul
+  :php
+    foreach(Kohana::modules() as $module):
+  li
+    :php
+      $module_name = basename($module);
+    span!= module_name
+  :php
+    endforeach;
+:php
+  endif;
+
+h4 Platforma
+ul
+  li PHP
+    :php
+      print(phpversion());
+  li MySQL
+    :php
+      print(mysql_get_server_info());
+
+<br/>

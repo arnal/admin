@@ -1,3 +1,9 @@
+
+h4 Vítejte v administračním rozhraní serveru
+  a(href="/")= site_config.title
+  |.
+<br/>
+
 h3 Přehled
 
 :css
@@ -53,22 +59,3 @@ div.container-fluid
       | expirovaných
 
 <br />
-h4 Systém
-ul
-  li Kohana
-    :php
-      print(Kohana::VERSION);
-  li PHP
-    :php
-      print(phpversion());
-  li MySQL
-    :php
-      print(mysql_get_server_info());
-
-<br/>
-
-h4 Uvítání
-p Vítejte v administračním rozhraní serveru
-  a(href="/")= site_config.title
-  |.
-

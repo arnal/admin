@@ -48,6 +48,12 @@ Route::set('admin/logout', 'logout')
     'action'     => 'logout',
   ));
 
+Route::set('admin/about', 'about')
+  ->defaults(array(
+    'controller' => 'admin_index',
+    'action'     => 'about',
+  ));
+
 Route::set('admin/default', '(<controller>(/<action>(/<id>)))')
   ->defaults(array(
     'controller' => 'admin_index',
