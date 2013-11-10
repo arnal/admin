@@ -5,7 +5,7 @@ class Kohana_Controller_Admin_Login extends Controller_Admin_Basic {
   public function action_logout()
   {
     Auth::instance()->logout();
-    $this->redirect('/login');
+    $this->redirect($this->request->url());
   }
 
   public function action_index()
@@ -32,7 +32,7 @@ class Kohana_Controller_Admin_Login extends Controller_Admin_Basic {
       else
       {
         Arnal::msg('<strong>Špatný login</strong>. Neplatné přihlašovací údaje.','error');
-        return $this->redirect('/login');
+        return $this->redirect('admin/login');
       }
     }
 

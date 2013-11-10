@@ -1,6 +1,8 @@
 <?php defined( 'SYSPATH') or die( 'No direct script access.');
 
-Route::set('object_list', '<type>',
+$admin_prefix = Kohana::$config->load('admin')->get('url_prefix');
+
+Route::set('admin/object_list', $admin_prefix.'<type>',
   array(
     'type' => Arnal::objects_plural_route(),
   ))
@@ -9,7 +11,7 @@ Route::set('object_list', '<type>',
     'action'     => 'list',
   ));
 
-Route::set('admin/object', '<type>/<id>(.<format>)(/<action>)',
+Route::set('admin/object', $admin_prefix.'<type>/<id>(.<format>)(/<action>)',
   array(
     'type' => Arnal::objects_route(),
     'id' => '\d+',
@@ -21,7 +23,7 @@ Route::set('admin/object', '<type>/<id>(.<format>)(/<action>)',
     'action'     => 'show',
   ));
 
-Route::set('admin/object_new', '<type>/create',
+Route::set('admin/object_new', $admin_prefix.'<type>/create',
   array(
     'type' => Arnal::objects_route(),
   ))
@@ -30,19 +32,19 @@ Route::set('admin/object_new', '<type>/create',
     'action'     => 'create',
   ));
 
-Route::set('admin/login', 'login')
+Route::set('admin/login', $admin_prefix.'login')
   ->defaults(array(
     'controller' => 'admin_login',
     'action'     => 'index',
   ));
 
-Route::set('admin/prefs', 'prefs')
+Route::set('admin/prefs', $admin_prefix.'prefs')
   ->defaults(array(
     'controller' => 'admin_admin',
     'action'     => 'prefs',
   ));
 
-Route::set('admin/logout', 'logout')
+Route::set('admin/logout', $admin_prefix.'logout')
   ->defaults(array(
     'controller' => 'admin_login',
     'action'     => 'logout',
@@ -54,11 +56,20 @@ Route::set('admin/about', 'about')
     'action'     => 'about',
   ));
 
-Route::set('admin/default', '(<controller>(/<action>(/<id>)))')
-  ->defaults(array(
-    'controller' => 'admin_index',
-    'action'     => 'index',
-  ));
+if(substr($admin_prefix, mb_strlen($admin_prefix)-1, 1) == "/")
+{
+  $index_route = rtrim($admin_prefix, '/').'(/<controller>(/<action>(/<id>)))';
+} 
+else 
+{
+  $index_route = $admin_prefix.'(<controller>(/<action>(/<id>)))';
+}
+
+Route::set('admin/default', $index_route)
+->defaults(array(
+  'controller' => 'admin_index',
+  'action'     => 'index',
+));
 
 Route::set('admin/ajx', 'ajx')
   ->defaults(array(

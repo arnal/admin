@@ -5,10 +5,13 @@ class Kohana_Controller_Admin_Basic extends Controller {
   public function before()
   {
     //Auth::instance()->auto_login(TRUE);
-
-    if($this->request->uri() != 'login' AND !Auth::instance()->logged_in())
+    if($this->request->uri() != Route::get('admin/login')->uri() 
+        AND !Auth::instance()->logged_in())
     {
-      $this->redirect('/login?r='.urlencode($this->request->uri()));
+
+      $this->redirect(
+        Route::get('admin/login')->uri().'?r='.urlencode($this->request->uri())
+      );
     }
   } 
 
