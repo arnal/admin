@@ -33,7 +33,7 @@ class Kohana_Controller_Admin_Admin extends Controller_Admin_Basic {
       } 
 
       Arnal::msg('Vaše nastavení bylo uloženo.');
-      $this->redirect('prefs');
+      $this->redirect(Route::get('admin/default')->uri().'/prefs');
       return;
     }
 

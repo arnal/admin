@@ -10,7 +10,7 @@ class Kohana_Controller_Admin_Login extends Controller_Admin_Basic {
 
   public function action_index()
   {
-    session_start();
+    //session_start();
 
     $post = $this->request->post();
     if(isset($_GET['do']))
@@ -27,7 +27,7 @@ class Kohana_Controller_Admin_Login extends Controller_Admin_Basic {
           
         $user = Auth::instance()->get_user();
         Arnal::log('User.login', array(), 'User', $user->id);
-        return $this->redirect(isset($_GET['r']) ? urldecode($_GET['r']) : '/');
+        return $this->redirect(isset($_GET['r']) ? urldecode($_GET['r']) : Route::get('admin/default')->uri());
       }
       else
       {

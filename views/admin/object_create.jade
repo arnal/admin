@@ -7,7 +7,7 @@ h3
   input { width: 500px; }
   textarea { width: 500px; }
 
-form.form-horizontal(method='post')
+form.form-horizontal(method='post',enctype='multipart/form-data')
   input(type='hidden', name='do', value='1')
   each c, c_id in cols
     div.control-group

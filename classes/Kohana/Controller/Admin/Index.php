@@ -6,7 +6,7 @@ class Kohana_Controller_Admin_Index extends Controller_Admin_Basic {
   {
     $view = new View_Admin_Layout('admin/index');
     $view->current_page = 'hp';
-    $view->content->stats = Namlouvani::statistics();
+    $view->content->stats = NULL;
     $this->response->body($view->render());
   }
 

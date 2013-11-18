@@ -5,23 +5,44 @@ class Kohana_View_Admin_Layout extends Kohana_View_Jade_Layout {
   var $layout_template = 'admin/layout';
   var $current_page = NULL;
   var $site_config;
+  var $admin_config;
 
   public function before()
   {
     $user = Auth::instance()->get_user();
 
     $this->site_config = Kohana::$config->load('site')->as_array();
+    $this->admin_config = Kohana::$config->load('admin')->as_array();
 
     // twitter bootstrap
     $this->vars['css'] = Twitterbootstrap::css();
     $this->vars['js'] = Twitterbootstrap::js();
 
     // jsondiffpatch -- https://github.com/benjamine/JsonDiffPatch
-    $this->vars['js'][] = URL::site('js/jsondiffpatch.js');
-    $this->vars['js'][] = URL::site('js/bootstrap-datepicker.js');
-    $this->vars['js'][] = URL::site('js/locales/bootstrap-datepicker.cs.js');
-    $this->vars['css'][] = URL::site('css/jsondiffpatch.css');
-    $this->vars['css'][] = URL::site('css/datepicker.css');
+    $this->vars['js'][] = URL::site('/js/admin/jsondiffpatch.js');
+    $this->vars['js'][] = URL::site('/js/admin/bootstrap-datepicker.js');
+    $this->vars['js'][] = URL::site('/js/admin/locales/bootstrap-datepicker.cs.js');
+  
+    // add js from config
+    if(isset($this->admin_config['js']) AND is_array($this->admin_config['js']))
+    {
+      foreach($this->admin_config['js'] as $js)
+      {
+        $this->vars['js'][] = URL::site($js);
+      }
+    }
+
+    // add css from config
+    if(isset($this->admin_config['css']) AND is_array($this->admin_config['css']))
+    {
+      foreach($this->admin_config['css'] as $css)
+      {
+        $this->vars['css'][] = URL::site($css);
+      }
+    }
+
+    $this->vars['css'][] = URL::site('/css/admin/jsondiffpatch.css');
+    $this->vars['css'][] = URL::site('/css/admin/datepicker.css');
 
     $this->vars['objects'] = Arnal::$schema->load_all();
     $this->vars['menu'] = $this->menu();
@@ -52,7 +73,8 @@ class Kohana_View_Admin_Layout extends Kohana_View_Jade_Layout {
       'name' => $schema['name_plural'],
       'code' => $schema['plural'],
       'url' => $schema['home_url'],
-      'admin' => $schema['admin'],
+      'admin' => isset($schema['admin']) ? $schema['admin'] : NULL,
+      'class' => false,
     );
   }
 
@@ -84,8 +106,16 @@ class Kohana_View_Admin_Layout extends Kohana_View_Jade_Layout {
 
       if(empty($cur['url']))
       {
-        $cur['url'] = URL::site('');
+        $cur['url'] = URL::site(Route::get('admin/default')->uri());
       }
+      else
+      {
+        $cur['url'] = URL::site(Route::get('admin/default')->uri().$cur['url']);
+      }
+      $cur['class'] = isset($cur['class']) ? $cur['class'] : NULL;
+      $cur['code'] = isset($cur['code']) ? $cur['code'] : NULL;
+      $cur['sections'] = isset($cur['sections']) ? $cur['sections'] : NULL;
+      $cur['name'] = isset($cur['name']) ? $cur['name'] : NULL;
 
       $menu[] = $cur;
     }
@@ -97,6 +127,10 @@ class Kohana_View_Admin_Layout extends Kohana_View_Jade_Layout {
     if(Auth::instance()->get_user()->pref('admin:profile'))
     {
       $this->vars['profiler'] = '@@@PROFILER@@@';
+    }
+    else
+    {
+      $this->vars['profiler'] = FALSE;
     }
     $this->vars['current_page'] = $this->current_page;
   }

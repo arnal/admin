@@ -9,6 +9,10 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       $cn = 'Model_'.ucfirst($conf['id']);
       $rights = $cn::access_rights();
     }
+    else
+    {
+      $rights = FALSE;
+    }
     if($rights)
     {
       foreach($rights['wheres'] as $w)
@@ -82,7 +86,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
 
     if(!$item->loaded())
     {
-      return $this->redirect($conf['plural']);
+      return $this->redirect(Route::get('admin/object_list')->url(array('type' => $conf['plural'])));
     }
 
     if(isset($_POST['do']))
@@ -90,7 +94,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       $res = $this->_edit_do(ucfirst($current_type['id']), $item->id, $_POST);
       if($res)
       {
-        $this->redirect($res->url());
+        $this->redirect($res->admin_url());
       }
     }
 
@@ -135,7 +139,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       Arnal::msg('Smazání objektu proběhlo úspěšně.');
       Arnal::log($class.'.delete', $item_array, $class, $item_id);
     }
-    $this->redirect($conf['plural']);
+    $this->redirect(Route::get('admin/object_list')->uri(array('type' => $conf['plural'])));
   }
 
   public function action_show()
@@ -157,7 +161,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     if(!$item->loaded())
     {
       Arnal::msg('Neexistující záznam nebo k němu nemáte přístup.', 'warning');
-      return $this->redirect('/');
+      return $this->redirect(Route::get('admin/default')->uri());
     }
 
     // zpracovani ulozeni poznamky
@@ -173,7 +177,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       Arnal::msg('Poznámka úspěšně uložena.');
       Arnal::log($class.'.'.$_POST['do'], $note, $class, $item->id);
 
-      return $this->redirect($item->url());
+      return $this->redirect($item->admin_url());
     }
 
     // other types -- JSON
@@ -186,8 +190,8 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     $view = new View_Admin_Layout('admin/object_show');
     $view->content->cols = $item->render('show');
     $view->content->cancel_url = $this->request->referrer(); 
-    $view->content->edit_url = $item->url().'/edit';
-    $view->content->delete_url = $item->url().'/delete';
+    $view->content->edit_url = $item->admin_url().'/edit';
+    $view->content->delete_url = $item->admin_url().'/delete';
     $view->content->history_url = URL::site('logs'.URL::query(array('otype' => ucfirst($conf['id']), 'oid' => '^'.$item->id.'$')),TRUE);
     $view->content->type = $conf;
     $view->content->item = $item->as_array();
@@ -234,7 +238,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
         }
         elseif(isset($conf['cols'][$key]) AND isset($conf['cols'][$key]['dt']))
         {
-          $dt = DT::factory($conf['cols'][$key]['dt'], $val);
+          $dt = DT::factory($conf['cols'][$key]['dt'], $val, array('_col_name' => $key));
           $dt_config = $dt->config();
           if(isset($dt_config['password_mode']) AND $dt_config['password_mode'] == TRUE)
           {
@@ -278,7 +282,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       {
         if(isset($conf['cols'][$key]) AND isset($conf['cols'][$key]['dt']))
         {
-          $dt = DT::factory($conf['cols'][$key]['dt'], $val);
+          $dt = DT::factory($conf['cols'][$key]['dt'], $val, array('_col_name' => $key));
           $item->set($key, $dt->to_db());
         }
         else
@@ -326,7 +330,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       $res = $this->_create_do(ucfirst($current_type['id']), $_POST);
       if($res)
       {
-        $this->redirect($res->url());
+        $this->redirect($res->admin_url());
       }
     }
 
@@ -453,9 +457,14 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
       return $this->denied_redirect();
     }
 
+    $sort = array('id','DESC');
+    if(isset($conf['sort']) AND !empty($conf['sort']))
+    {
+      $sort = $conf['sort'];
+    }
     $items = Collection::factory(ucfirst($conf['id']), array(
       'limit' => $this->user()->pref('list:perpage'),
-      'order_by' => array('id', 'DESC'),
+      'order_by' => $sort,
     ));
 
     // uzivatelska prava nastavena na Modelu
