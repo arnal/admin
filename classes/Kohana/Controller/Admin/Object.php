@@ -192,7 +192,7 @@ class Kohana_Controller_Admin_Object extends Controller_Admin_Basic {
     $view->content->cancel_url = $this->request->referrer(); 
     $view->content->edit_url = $item->admin_url().'/edit';
     $view->content->delete_url = $item->admin_url().'/delete';
-    $view->content->history_url = URL::site('logs'.URL::query(array('otype' => ucfirst($conf['id']), 'oid' => '^'.$item->id.'$')),TRUE);
+    $view->content->history_url = URL::site(Route::get('admin/default')->uri() . '/' . 'logs'.URL::query(array('otype' => ucfirst($conf['id']), 'oid' => '^'.$item->id.'$')),TRUE);
     $view->content->type = $conf;
     $view->content->item = $item->as_array();
     if(in_array('note', array_keys($item->table_columns())))
