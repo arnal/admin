@@ -78,10 +78,10 @@ form#list-form(method="post",action="?action")
                 td
                   div.list-control
                     if config['allow_edit']
-                      a.btn.btn-mini(href=''+item['url']+'/edit') Upravit
+                      a.btn.btn-mini(href=''+item['admin_url']+'/edit') Upravit
 
                     if config['allow_delete']
-                      a.btn.btn-mini.btn-danger(href=''+item['url']+'/delete',onclick='return confirm("Opravdu chcete toto smazat?");') Smazat
+                      a.btn.btn-mini.btn-danger(href=''+item['admin_url']+'/delete',onclick='return confirm("Opravdu chcete toto smazat?");') Smazat
   else
     p Nic nenalezeno.
 
