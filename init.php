@@ -56,16 +56,7 @@ Route::set('admin/about', 'about')
     'action'     => 'about',
   ));
 
-if(substr($admin_prefix, mb_strlen($admin_prefix)-1, 1) == "/")
-{
-  $index_route = rtrim($admin_prefix, '/').'(/<controller>(/<action>(/<id>)))';
-} 
-else 
-{
-  $index_route = $admin_prefix.'(<controller>(/<action>(/<id>)))';
-}
-
-Route::set('admin/default', $index_route)
+Route::set('admin/default', rtrim($admin_prefix, '/'))
 ->defaults(array(
   'controller' => 'admin_index',
   'action'     => 'index',
